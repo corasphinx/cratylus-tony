@@ -17,11 +17,7 @@ const modalStyle = {
   p: 4,
 }
 function App() {
-  const [divs, setDivs] = useState([
-    { id: 0, color: '#000' },
-    { id: 1, color: '#0F0' },
-    { id: 2, color: '#F00' },
-  ])
+  const [divs, setDivs] = useState([])
   const [isOpenAddModal, showOpenModal] = useState(false)
   const [currentColor, setCurrentColor] = useState('')
 
@@ -35,11 +31,15 @@ function App() {
       color: currentColor
     }])
   }
-  const importDivs = () => {
-    console.info("importDivs")
-  }
-  const exportDivs = () => {
-    console.info("exportDivs")
+
+  const exportDivs = async () => {
+    const fileData = JSON.stringify(divs);
+    const blob = new Blob([fileData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'divs.json';
+    link.href = url;
+    link.click();
   }
   const renderDivs = () => {
     return divs.map(div =>
@@ -56,7 +56,6 @@ function App() {
   return (
     <Container>
       <Button variant="outlined" startIcon={<AddCircleOutline />} onClick={openAddModal}>Add Div</Button>
-      <Button variant="outlined" startIcon={<FolderOpen />} onClick={importDivs}>Import from JSON</Button>
       <Button variant="outlined" startIcon={<Save />} onClick={exportDivs}>Export to JSON</Button>
 
       {renderDivs()}
